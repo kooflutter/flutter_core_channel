@@ -1,8 +1,3 @@
+library flutter_channel;
 
-import 'flutter_core_channel_platform_interface.dart';
-
-class FlutterCoreChannel {
-  Future<String?> getPlatformVersion() {
-    return FlutterCoreChannelPlatform.instance.getPlatformVersion();
-  }
-}
+export 'package:flutter_core_channel/channel/channel.dart';

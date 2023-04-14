@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_core_channel/channel/BaseMessengerHandler.dart';
 import 'package:flutter_core_channel/flutter_core_channel.dart';
 
 void main() {
@@ -17,34 +18,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _flutterCoreChannelPlugin = FlutterCoreChannel();
+  // final _flutterCoreChannelPlugin = FlutterCoreChannel();
+
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _flutterCoreChannelPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    FlutterChannel.instance.addMessenger(messenger: TestMessenger());
   }
 
   @override
@@ -55,9 +35,28 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: InkWell(onTap:(){
+            FlutterChannel.instance.send(
+                route: "sendMessageToNative",
+                action: "version",
+                params: {
+                  "id": "2222",
+                  "data": {"name": "fsafldkj"}
+                }).then((value) => {print("main.dart   原生返回值 === ${value}")});
+          },child: Text('向原生发送消息')),
         ),
       ),
     );
   }
+}
+class TestMessenger extends BaseMessengerHandler {
+  @override
+  Map<String, dynamic>? didReceivedNativeSignal(
+      String action, Map<String, dynamic>? params) {
+    print("接受到原生消息 == $action, params == $params");
+    return {"woman": "嗯嗯嗯 - Flutter"};
+  }
+
+  @override
+  String get methodName => "sendMessageToNative";
 }

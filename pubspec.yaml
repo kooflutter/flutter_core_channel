@@ -41,15 +41,15 @@ flutter:
         pluginClass: FlutterCoreChannelPlugin
       ios:
         pluginClass: FlutterCoreChannelPlugin
-      linux:
-        pluginClass: FlutterCoreChannelPlugin
-      macos:
-        pluginClass: FlutterCoreChannelPlugin
-      windows:
-        pluginClass: FlutterCoreChannelPluginCApi
-      web:
-        pluginClass: FlutterCoreChannelWeb
-        fileName: flutter_core_channel_web.dart
+#      linux:
+#        pluginClass: FlutterCoreChannelPlugin
+#      macos:
+#        pluginClass: FlutterCoreChannelPlugin
+#      windows:
+#        pluginClass: FlutterCoreChannelPluginCApi
+#      web:
+#        pluginClass: FlutterCoreChannelWeb
+#        fileName: flutter_core_channel_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
