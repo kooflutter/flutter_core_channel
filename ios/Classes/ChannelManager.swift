@@ -1,9 +1,9 @@
 import Foundation
 import Flutter
 
-class ChannelManager {
+public class ChannelManager {
 
-    static let sharedInstance = ChannelManager()
+    public static let sharedInstance = ChannelManager()
 
     private var lock = NSLock()
     private var channel: FlutterMethodChannel?
@@ -20,11 +20,11 @@ class ChannelManager {
         }
     }
 
-    func addAllMessengers(_ messengers: [BaseMessengerHandler]?) {
+    public func addAllMessengers(_ messengers: [BaseMessengerHandler]?) {
         if let messengers = messengers {
             safeExe {
                 for messenger in messengers {
-                    self.messengers[messenger.methodName] = messenger
+                    self.messengers[messenger.methodName()] = messenger
                 }
             }
         }
@@ -33,7 +33,7 @@ class ChannelManager {
     func addMessenger(_ messenger: BaseMessengerHandler?) {
         if let messenger = messenger {
             safeExe {
-                self.messengers[messenger.methodName] = messenger
+                self.messengers[messenger.methodName()] = messenger
             }
         }
     }
@@ -52,31 +52,33 @@ class ChannelManager {
         }
     }
 
-    func send(_ route: String?, action: String?, result: MessageResult? = nil) {
-        guard let route = route, let action = action else {
-            return
-        }
-        channel?.invokeMethod(route, arguments: encode(wrap(0, data: nil, msg: "success", action: action)), result: result)
+    func send(_ route: String, action: String) {
+        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: nil, msg: "success", action: action)), result: nil)
     }
 
-    func send(_ route: String?, action: String?, params: KooMessengerMap?, result: MessageResult? = nil) {
-        guard let route = route, let action = action, let params = params else {
-            return
-        }
-        channel?.invokeMethod(route, arguments: encode(wrap(0, data: params, msg: "success", action: action)), result: result)
+    func send(_ route: String, action: String, params: FlutterMessengerMap) {
+        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action: action)), result: nil)
     }
+
+//     func send(_ route: String, action: String) {
+//         channel!.invokeMethod(route, arguments: encode(wrap(0, data: nil, msg: "success", action: action)), result: nil)
+//     }
+
+//     func send(_ route: String, action: String, params: FlutterMessengerMap, result: MessageResult) {
+//         channel!.invokeMethod(route, arguments: encode(wrap(0, data: params, msg: "success", action: action)), result: result)
+//     }
 
     private func handleFlutterMessage(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let messenger = messengers[call.method], let json = call.arguments as? String else {
-            result(encode(wrap(-999, data: nil, msg: "failed", action: nil)))
+            result(encode(wrap(code: -999, data: nil, msg: "failed", action: nil)))
             return
         }
 
         var decode = decode(json) ?? [:]
         let action = decode["action"] as? String
         decode.removeValue(forKey: "action")
-        let ret = messenger.didReceivedFlutterSignal(decode, action: action)
-        result(encode(wrap(0, data: ret, msg: "success", action: nil)))
+        let ret = messenger.didReceivedFlutterSignal(params: decode, action: action)
+        result(encode(wrap(code: 0, data: ret, msg: "success", action: nil)))
     }
 
     private func decode(_ data: Any?) -> [String: Any]? {
@@ -113,20 +115,6 @@ class ChannelManager {
             block()
             lock.unlock()
         }
-    }
-
-    var messengers: [String: BaseMessengerHandler] {
-        if _messengers == nil {
-            _messengers = [String: BaseMessengerHandler]()
-        }
-        return _messengers
-    }
-
-    var lock: NSLock {
-        if _lock == nil {
-            _lock = NSLock()
-        }
-        return _lock
     }
 
 }
