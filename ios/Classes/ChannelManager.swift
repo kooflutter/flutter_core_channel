@@ -6,7 +6,7 @@ public class ChannelManager {
     public static let sharedInstance = ChannelManager()
 
     private var lock = NSLock()
-    private var channel: FlutterMethodChannel?
+    public var channel: FlutterMethodChannel?
     private var messengers = [String: BaseMessengerHandler]()
 
     private init() {}
@@ -52,11 +52,11 @@ public class ChannelManager {
         }
     }
 
-    func send(_ route: String, action: String) {
+    public func send(_ route: String, action: String) {
         channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: nil, msg: "success", action: action)), result: nil)
     }
 
-    func send(_ route: String, action: String, params: FlutterMessengerMap) {
+    public func send(_ route: String, action: String, params: FlutterMessengerMap) {
         channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action: action)), result: nil)
     }
 
@@ -64,9 +64,10 @@ public class ChannelManager {
 //         channel!.invokeMethod(route, arguments: encode(wrap(0, data: nil, msg: "success", action: action)), result: nil)
 //     }
 
-//     func send(_ route: String, action: String, params: FlutterMessengerMap, result: MessageResult) {
-//         channel!.invokeMethod(route, arguments: encode(wrap(0, data: params, msg: "success", action: action)), result: result)
-//     }
+    public func send(_ route: String, action: String, params: FlutterMessengerMap, result: MessageResult) {
+        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action:action)))
+        //, result: result
+    }
 
     private func handleFlutterMessage(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let messenger = messengers[call.method], let json = call.arguments as? String else {
