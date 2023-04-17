@@ -39,7 +39,7 @@ class TestMessenger: NSObject, BaseMessengerHandler {
 
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-//         GeneratedPluginRegistrant.register(with: self)
+        GeneratedPluginRegistrant.register(with: self)
          ChannelManager.sharedInstance.addAllMessengers([TestMessenger()])
 //         ChannelManager.sharedInstance()?.addAllMessengers([TestMessenger()])
 //         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
