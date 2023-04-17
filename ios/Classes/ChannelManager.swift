@@ -60,10 +60,6 @@ public class ChannelManager {
         channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action: action)), result: nil)
     }
 
-//     func send(_ route: String, action: String) {
-//         channel!.invokeMethod(route, arguments: encode(wrap(0, data: nil, msg: "success", action: action)), result: nil)
-//     }
-
     public func send(_ route: String, action: String, params: FlutterMessengerMap, result: MessageResult) {
         channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action:action)))
         //, result: result
