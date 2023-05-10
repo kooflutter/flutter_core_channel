@@ -34,7 +34,7 @@ object ChannelManager: MethodChannel.MethodCallHandler {
         methodChannel.setMethodCallHandler(null)
     }
 
-    /// 添加所有信使
+    /// 添加多个消息处理器
     @Synchronized
     fun addAllMessengers(messengers: Array<BaseMessengerHandler>) {
         for (m: BaseMessengerHandler in messengers) {
@@ -42,19 +42,19 @@ object ChannelManager: MethodChannel.MethodCallHandler {
         }
     }
 
-    /// 添加单个信使
+    /// 添加单个消息处理器
     @Synchronized
     fun addMessenger(messenger: BaseMessengerHandler) {
         messengers.put(key = messenger.methodName(), value = messenger)
     }
 
-    /// 移除单个信使
+    /// 移除单个消息处理器
     @Synchronized
     fun removeMessenger(route: String) {
         messengers.remove(route)
     }
 
-    /// 移除所有信使
+    /// 移除所有消息处理器
     @Synchronized
     fun removeAllMessengers() {
         messengers.clear()

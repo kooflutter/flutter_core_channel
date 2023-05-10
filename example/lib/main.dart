@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:flutter_core_channel/channel/BaseMessengerHandler.dart';
 import 'package:flutter_core_channel/flutter_core_channel.dart';
 
 void main() {
@@ -37,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: InkWell(onTap:(){
             FlutterChannel.instance.send(
-                route: "sendMessageToNative",
+                methodName: "sendMessageToNative",
                 action: "version",
                 params: {
                   "id": "2222",
