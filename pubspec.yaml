@@ -1,8 +1,8 @@
 name: flutter_core_channel
 description: 一个新的flutter channel插件
-version: 0.0.1
-homepage: http://www.allinmeta.net
-
+version: 0.0.2
+homepage: https://github.com/kooflutter/flutter_core_channel
+# flutter pub publish  插件发布命令
 environment:
   sdk: '>=2.19.4 <3.0.0'
   flutter: ">=2.5.0"
