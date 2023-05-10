@@ -13,7 +13,6 @@ interface BaseMessengerHandler {
 
     /// 收到来自Flutter的消息
     /// params: 消息参数
-    /// action: 执行目的
     /// 返回给Flutter的值
-    fun didReceivedFlutterSignal(params: FlutterMessengerMap?, action: String): FlutterMessengerMap?
+    fun didReceivedFlutterSignal(params: FlutterMessengerMap?): FlutterMessengerMap?
 }

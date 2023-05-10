@@ -47,13 +47,12 @@ class FlutterChannel {
     }
   }
 
-  /// 发送发送指定信息到某一个方法中,,,此处action可斟酌。
+  /// 发送发送指定信息到某一个方法中。
   Future<Map<String, dynamic>?> send(
       {required String methodName,
-      required String action,
       Map<String, dynamic>? params}) {
     Map<String, dynamic>? params0 = params ?? {};
-    String json = jsonEncode(_wrap(code: "0", data: params0, action: action));
+    String json = jsonEncode(_wrap(code: "0", data: params0));
     return _methodChannel
         .invokeMethod<String>(methodName, json)
         .then((String? value) {
@@ -94,8 +93,7 @@ class FlutterChannel {
       String params = call.arguments;
       Map<String, dynamic> arguments =
       jsonDecode(params) as Map<String, dynamic>;
-      String action = arguments.remove("action");
-      Map<String, dynamic> ret =messenger.didReceivedNativeSignal(action, arguments) ?? {};
+      Map<String, dynamic> ret =messenger.didReceivedNativeSignal(arguments) ?? {};
       ret = _wrap(data: ret, invoke: false);
       return Future.value(jsonEncode(ret));
     });
@@ -106,10 +104,9 @@ class FlutterChannel {
       {String code = "0",
       Map<String, dynamic> data = const {},
       String msg = "success",
-      String action = "",
       bool invoke = true}) {
       if (invoke) {
-        return {"code": code, "data": data, "msg": msg, "action": action};
+        return {"code": code, "data": data, "msg": msg};
       }
       return {"code": code, "data": data, "msg": msg};
   }

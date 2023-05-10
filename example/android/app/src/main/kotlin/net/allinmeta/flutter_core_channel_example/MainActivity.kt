@@ -23,15 +23,15 @@ class TestMessenger : BaseMessengerHandler {
         return "sendMessageToNative"
     }
 
-    override fun didReceivedFlutterSignal(params: FlutterMessengerMap?, action: String): FlutterMessengerMap? {
-        Log.e("MainActivity", "收到flutter的消息 == $params, action == $action")
+    override fun didReceivedFlutterSignal(params: FlutterMessengerMap?): FlutterMessengerMap? {
+        Log.e("MainActivity", "收到flutter的消息 == $params")
         val ret: FlutterMessengerMap = FlutterMessengerMap()
         ret["native"] = "android"
 
         Handler().postDelayed({
             val x: FlutterMessengerMap = FlutterMessengerMap()
             x["man"] = "哈哈 - Android"
-            ChannelManager.send(methodName(), "share", x) {
+            ChannelManager.send(methodName(), x) {
                 Log.e("MainActivity", "Flutter返回值 == $it")
             }
         }, 5000);

@@ -36,7 +36,6 @@ class _MyAppState extends State<MyApp> {
           child: InkWell(onTap:(){
             FlutterChannel.instance.send(
                 methodName: "sendMessageToNative",
-                action: "version",
                 params: {
                   "id": "2222",
                   "data": {"name": "fsafldkj"}
@@ -49,9 +48,8 @@ class _MyAppState extends State<MyApp> {
 }
 class TestMessenger extends BaseMessengerHandler {
   @override
-  Map<String, dynamic>? didReceivedNativeSignal(
-      String action, Map<String, dynamic>? params) {
-    print("接受到原生消息 == $action, params == $params");
+  Map<String, dynamic>? didReceivedNativeSignal(Map<String, dynamic>? params) {
+    print("接受到原生消息 params == $params");
     return {"woman": "嗯嗯嗯 - Flutter"};
   }
 

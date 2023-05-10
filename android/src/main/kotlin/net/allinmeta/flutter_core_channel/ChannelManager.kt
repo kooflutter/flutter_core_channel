@@ -62,7 +62,6 @@ object ChannelManager: MethodChannel.MethodCallHandler {
 
     /// 发送消息值Flutter
     /// route 消息路由
-    /// action 目的地
     /// params 消息参数
     /// result flutter给原生的回调
     fun send(methodName: String, params: FlutterMessengerMap? = FlutterMessengerMap(), result: MessageResult? = null) {
@@ -81,8 +80,7 @@ object ChannelManager: MethodChannel.MethodCallHandler {
             result.success(encode(wrap(msg = "failed", code = -999)))
         }else{
             val params: HashMap<String, Any> = decode((call.arguments as String))
-            val action: String = params.remove("action") as String
-            var ret: FlutterMessengerMap? = messenger.didReceivedFlutterSignal(params, action)
+            var ret: FlutterMessengerMap? = messenger.didReceivedFlutterSignal(params)
             result.success(encode(wrap(data = ret, msg = "success")))
         }
 
