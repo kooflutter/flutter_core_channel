@@ -50,8 +50,8 @@ object ChannelManager: MethodChannel.MethodCallHandler {
 
     /// 移除单个消息处理器
     @Synchronized
-    fun removeMessenger(route: String) {
-        messengers.remove(route)
+    fun removeMessenger(methodName: String) {
+        messengers.remove(methodName)
     }
 
     /// 移除所有消息处理器
@@ -65,10 +65,10 @@ object ChannelManager: MethodChannel.MethodCallHandler {
     /// action 目的地
     /// params 消息参数
     /// result flutter给原生的回调
-    fun send(route: String, action: String, params: FlutterMessengerMap? = FlutterMessengerMap(), result: MessageResult? = null) {
+    fun send(methodName: String, params: FlutterMessengerMap? = FlutterMessengerMap(), result: MessageResult? = null) {
         methodChannel.invokeMethod(
-                route,
-                encode(wrap(msg = "success", action = action, data = params)),
+                methodName,
+                encode(wrap(msg = "success", data = params)),
                 FlutterSendMessageCallBack(result)
         )
     }
@@ -77,16 +77,15 @@ object ChannelManager: MethodChannel.MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         var messenger: BaseMessengerHandler? = messengers[call.method]
         if (messenger == null) {
-            Log.e("KooChannel",
-                    "在messengers<${messengers.keys}>中未找到${call.method}对应的messenger，确保调用前已经注册"
-            )
+            Log.e("KooChannel","在messengers<${messengers.keys}>中未找到${call.method}对应的messenger，确保调用前已经注册")
             result.success(encode(wrap(msg = "failed", code = -999)))
-            return
+        }else{
+            val params: HashMap<String, Any> = decode((call.arguments as String))
+            val action: String = params.remove("action") as String
+            var ret: FlutterMessengerMap? = messenger.didReceivedFlutterSignal(params, action)
+            result.success(encode(wrap(data = ret, msg = "success")))
         }
-        val params: HashMap<String, Any> = decode((call.arguments as String))
-        val action: String = params.remove("action") as String
-        var ret: FlutterMessengerMap? = messenger.didReceivedFlutterSignal(params, action)
-        result.success(encode(wrap(data = ret, msg = "success")))
+
     }
 
 

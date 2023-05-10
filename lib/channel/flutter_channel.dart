@@ -84,11 +84,11 @@ class FlutterChannel {
 
   /// 注册消息通道，处理原生发过来的消息。
   void _registerMethodCallHandler(){
-    instance._methodChannel.setMethodCallHandler((MethodCall call) {
+    _methodChannel.setMethodCallHandler((MethodCall call) {
       Uri name = Uri.parse(call.method);
       BaseMessengerHandler? messenger = _messengers[call.method];
       if (messenger == null) {
-        debugPrint("在messengers<${instance._messengers.keys}>中未找到${name.toString()}对应的messenger，确保调用前已经注册");
+        debugPrint("在messengers<${_messengers.keys}>中未找到${name.toString()}对应的messenger，确保调用前已经注册");
         return Future.value(_wrap(code: "-999", data: {}, msg: "failed", invoke: false));
       }
       String params = call.arguments;

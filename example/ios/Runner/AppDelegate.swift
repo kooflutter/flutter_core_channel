@@ -3,9 +3,9 @@ import Flutter
 import flutter_core_channel
 class TestMessenger: NSObject, BaseMessengerHandler {
 
-    func didReceivedFlutterSignal(params: FlutterMessengerMap?, action: String?) -> FlutterMessengerMap? {
+    func didReceivedFlutterSignal(params: FlutterMessengerMap?) -> FlutterMessengerMap? {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            ChannelManager.sharedInstance.send(self.methodName(), action: "share", params: ["man": "哈哈 - iOS"]) { result in
+            ChannelManager.sharedInstance.send(self.methodName(), params: ["man": "哈哈 - iOS"]) { result in
                 print("Flutter返回值 == (result)")
             }
         }

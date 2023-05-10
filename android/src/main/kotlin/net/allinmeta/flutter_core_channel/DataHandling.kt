@@ -35,14 +35,10 @@ fun encode(data: HashMap<String, Any>): String {
 /// 数据封包
 fun wrap(code: Int = 0,
                  data: HashMap<String, Any>? = HashMap<String, Any>(),
-                 msg: String = "",
-                 action: String? = null): HashMap<String, Any> {
+                 msg: String = ""): HashMap<String, Any> {
     val ret: HashMap<String, Any> = HashMap<String, Any>()
     ret.put(key = "code", value = code.toString())
     ret.put(key = "data", value = data!!)
     ret.put(key = "msg", value = msg)
-    if (action != null) {
-        ret.put(key = "action", value = action)
-    }
     return ret
 }

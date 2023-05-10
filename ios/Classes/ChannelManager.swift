@@ -1,6 +1,5 @@
 import Foundation
 import Flutter
-
 public class ChannelManager {
 
     public static let sharedInstance = ChannelManager()
@@ -38,10 +37,10 @@ public class ChannelManager {
         }
     }
 
-    func removeMessenger(_ route: String?) {
-        if let route = route {
+    func removeMessenger(_ methodName: String?) {
+        if let methodName = methodName {
             safeExe {
-                self.messengers.removeValue(forKey: route)
+                self.messengers.removeValue(forKey: methodName)
             }
         }
     }
@@ -52,30 +51,28 @@ public class ChannelManager {
         }
     }
 
-    public func send(_ route: String, action: String) {
-        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: nil, msg: "success", action: action)), result: nil)
+    public func send(_ methodName: String) {
+        channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: nil, msg: "success")), result: nil)
     }
 
-    public func send(_ route: String, action: String, params: FlutterMessengerMap) {
-        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action: action)), result: nil)
+    public func send(_ methodName: String, params: FlutterMessengerMap) {
+        channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")), result: nil)
     }
 
-    public func send(_ route: String, action: String, params: FlutterMessengerMap, result: MessageResult) {
-        channel!.invokeMethod(route, arguments: encode(wrap(code: 0, data: params, msg: "success", action:action)))
+    public func send(_ methodName: String, params: FlutterMessengerMap, result: MessageResult) {
+        channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")))
         //, result: result
     }
 
     private func handleFlutterMessage(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let messenger = messengers[call.method], let json = call.arguments as? String else {
-            result(encode(wrap(code: -999, data: nil, msg: "failed", action: nil)))
+            result(encode(wrap(code: -999, data: nil, msg: "failed")))
             return
         }
 
         var decode = decode(json) ?? [:]
-        let action = decode["action"] as? String
-        decode.removeValue(forKey: "action")
-        let ret = messenger.didReceivedFlutterSignal(params: decode, action: action)
-        result(encode(wrap(code: 0, data: ret, msg: "success", action: nil)))
+        let ret = messenger.didReceivedFlutterSignal(params: decode)
+        result(encode(wrap(code: 0, data: ret, msg: "success")))
     }
 
     private func decode(_ data: Any?) -> [String: Any]? {
@@ -93,14 +90,11 @@ public class ChannelManager {
         return String(data: jsonData ?? Data(), encoding: .utf8)
     }
 
-    func wrap(code: Int, data: [String: Any]? = nil, msg: String = "", action: String? = nil) -> [String: Any] {
+    func wrap(code: Int, data: [String: Any]? = nil, msg: String = "") -> [String: Any] {
         var ret = [String: Any]()
         ret["code"] = "\(code)"
         ret["data"] = data ?? [String: Any]()
         ret["msg"] = msg
-        if let action = action {
-            ret["action"] = action
-        }
         return ret
     }
 
