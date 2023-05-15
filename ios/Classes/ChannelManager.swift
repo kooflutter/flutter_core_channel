@@ -1,6 +1,6 @@
 import Foundation
 import Flutter
-public class ChannelManager {
+@objc public class ChannelManager: NSObject {
 
     public static let sharedInstance = ChannelManager()
 
@@ -8,7 +8,7 @@ public class ChannelManager {
     public var channel: FlutterMethodChannel?
     private var messengers = [String: BaseMessengerHandler]()
 
-    private init() {}
+    @objc private override init() {}
 
     func register(with registrar: FlutterPluginRegistrar) {
         if channel == nil {
@@ -55,8 +55,8 @@ public class ChannelManager {
         channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: nil, msg: "success")), result: nil)
     }
 
-    public func send(_ methodName: String, params: FlutterMessengerMap) {
-        channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")), result: nil)
+    @objc public func send(_ methodName: String, params: FlutterMessengerMap) {
+        channel?.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")), result: nil)
     }
 
     public func send(_ methodName: String, params: FlutterMessengerMap, result: MessageResult) {
