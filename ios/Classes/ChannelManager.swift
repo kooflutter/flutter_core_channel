@@ -11,12 +11,10 @@ import Flutter
     private override init() {}
 
     func register(with registrar: FlutterPluginRegistrar) {
-        if channel == nil {
             channel = FlutterMethodChannel(name: "flutter_core_channel", binaryMessenger: registrar.messenger())
             channel?.setMethodCallHandler { [weak self] call, result in
                 self?.handleFlutterMessage(call, result: result)
             }
-        }
     }
 
     @objc public func addAllMessengers(_ messengers: [BaseMessengerHandler]?) {
