@@ -2,13 +2,13 @@ import Foundation
 import Flutter
 @objc public class ChannelManager: NSObject {
 
-    public static let sharedInstance = ChannelManager()
+    @objc public static let sharedInstance = ChannelManager()
 
     private var lock = NSLock()
     public var channel: FlutterMethodChannel?
     private var messengers = [String: BaseMessengerHandler]()
 
-    @objc private override init() {}
+    private override init() {}
 
     func register(with registrar: FlutterPluginRegistrar) {
         if channel == nil {
@@ -19,7 +19,7 @@ import Flutter
         }
     }
 
-    public func addAllMessengers(_ messengers: [BaseMessengerHandler]?) {
+    @objc public func addAllMessengers(_ messengers: [BaseMessengerHandler]?) {
         if let messengers = messengers {
             safeExe {
                 for messenger in messengers {
@@ -29,7 +29,7 @@ import Flutter
         }
     }
 
-    func addMessenger(_ messenger: BaseMessengerHandler?) {
+    @objc func addMessenger(_ messenger: BaseMessengerHandler?) {
         if let messenger = messenger {
             safeExe {
                 self.messengers[messenger.methodName()] = messenger
@@ -37,7 +37,7 @@ import Flutter
         }
     }
 
-    func removeMessenger(_ methodName: String?) {
+    @objc func removeMessenger(_ methodName: String?) {
         if let methodName = methodName {
             safeExe {
                 self.messengers.removeValue(forKey: methodName)
@@ -45,7 +45,7 @@ import Flutter
         }
     }
 
-    func removeAllMessengers() {
+    @objc func removeAllMessengers() {
         safeExe {
             self.messengers.removeAll()
         }
@@ -59,7 +59,7 @@ import Flutter
         channel?.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")), result: nil)
     }
 
-    public func send(_ methodName: String, params: FlutterMessengerMap, result: MessageResult) {
+    @objc public func send(_ methodName: String, params: FlutterMessengerMap, result: MessageResult) {
         channel!.invokeMethod(methodName, arguments: encode(wrap(code: 0, data: params, msg: "success")))
         //, result: result
     }

@@ -1,6 +1,6 @@
 name: flutter_core_channel
 description: 一个新的flutter channel插件
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/kooflutter/flutter_core_channel
 # flutter pub publish  插件发布命令
 environment:
